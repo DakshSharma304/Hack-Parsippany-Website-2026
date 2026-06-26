@@ -56,6 +56,8 @@ function initMotion() {
     return;
   }
 
+  document.documentElement.classList.add("motion-ready");
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -71,7 +73,6 @@ function initMotion() {
   );
 
   sections.forEach((section) => observer.observe(section));
-  document.documentElement.classList.add("motion-ready");
 
   requestAnimationFrame(() => {
     sections.forEach((section) => {
@@ -80,7 +81,13 @@ function initMotion() {
       const isCurrentViewport =
         rect.top < window.innerHeight * 0.46 && rect.bottom > window.innerHeight * 0.22;
 
-      if (isHero || isCurrentViewport) {
+      if (isHero) {
+        window.setTimeout(() => revealSection(section), 180);
+        observer.unobserve(section);
+        return;
+      }
+
+      if (isCurrentViewport) {
         revealSection(section);
         observer.unobserve(section);
       }
